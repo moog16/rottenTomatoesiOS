@@ -19,16 +19,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.dataSource = self
         tableView.delegate = self
         
-        if let filePath = NSBundle.mainBundle().pathForResource("./box_office", ofType: "json") {
-            if let data = NSData(contentsOfFile: filePath) {
-                do {
-                    let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers)
-                    movies = json["movies"] as! [NSDictionary]
-                } catch {
-                    
-                }
+        let url = NSURL(string: "https://gist.githubusercontent.com/timothy1ee/d1778ca5b944ed974db0/raw/489d812c7ceeec0ac15ab77bf7c47849f2d1eb2b/gistfile1.json")!
+        let request = NSURLRequest(URL: url)
+        let getJsonTask = NSURLSession.sharedSession().dataTaskWithRequest(request) { (data, response, error) -> Void in
+            do {
+                let json = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+                self.movies = json["movies"] as? [NSDictionary]
+            } catch {
+                print("error=\(error)")
             }
         }
+        getJsonTask.resume()
         
     }
 
