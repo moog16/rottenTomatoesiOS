@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AFNetworking
 
 class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -25,6 +26,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             do {
                 let json = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
                 self.movies = json["movies"] as? [NSDictionary]
+                self.tableView.reloadData()
             } catch {
                 print("error=\(error)")
             }
@@ -41,13 +43,32 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func  tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
         
         let movie = movies![indexPath.row]
+        let posterUrl = NSURL(string: movie.valueForKeyPath("posters.thumbnail") as! String)!
+        
         cell.titleLabel.text = movie["title"] as? String
         cell.synopsisLabel.text = movie["synopsis"] as? String
+        print(posterUrl)
+        cell.posterView.setImageWithURL(posterUrl)
+        
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let cell = sender as! MovieCell
+        let indexPath = tableView.indexPathForCell(cell)
+        let movie = movies![indexPath!.row]
+        
+        let movieDetailsViewController = segue.destinationViewController as! MoviesDetailsViewController
+        movieDetailsViewController.movie = movie
     }
 
 }
