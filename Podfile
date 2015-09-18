@@ -4,5 +4,6 @@ use_frameworks!
 
 target 'RottenTomatoes' do
   pod "AFNetworking"
+  pod "MBProgressHUD"
 end
 
