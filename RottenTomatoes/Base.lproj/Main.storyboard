@@ -78,7 +78,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="676" y="368"/>
+            <point key="canvasLocation" x="736" y="822"/>
         </scene>
         <!--Movies Details View Controller-->
         <scene sceneID="2qD-CQ-150">
@@ -125,7 +125,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DIz-yz-aMF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1132" y="368"/>
+            <point key="canvasLocation" x="1352" y="822"/>
         </scene>
         <!--Box Office-->
         <scene sceneID="hQz-uE-Z0z">
@@ -146,10 +146,10 @@
             </objects>
             <point key="canvasLocation" x="200" y="438"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Movies Tab Bar Controller-->
         <scene sceneID="LdA-xU-pmW">
             <objects>
-                <tabBarController id="TZy-Vi-R6Q" sceneMemberID="viewController">
+                <tabBarController id="TZy-Vi-R6Q" customClass="MoviesTabBarController" customModule="RottenTomatoes" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="rcN-dX-q2T">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -164,21 +164,6 @@
             </objects>
             <point key="canvasLocation" x="-274" y="830"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="lrf-C2-0pl">
-            <objects>
-                <viewController id="rZM-XB-aXc" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ngr-FD-IUT">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="YXo-pJ-efP"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="uqw-IT-fX6" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="676" y="1223"/>
-        </scene>
         <!--Top Dvds-->
         <scene sceneID="Kam-2k-tFr">
             <objects>
@@ -191,7 +176,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="rZM-XB-aXc" kind="relationship" relationship="rootViewController" id="KEj-Pl-qVt"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="iPr-Cb-s1j"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="npZ-yJ-4Hv" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -203,4 +188,7 @@
         <image name="dvd" width="32" height="32"/>
         <image name="video" width="32" height="32"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="iPr-Cb-s1j"/>
+    </inferredMetricsTieBreakers>
 </document>

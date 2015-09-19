@@ -18,15 +18,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     var movies: [NSDictionary]?
     var refreshControl: UIRefreshControl!
     var originTableViewOriginY: CGFloat!
+    var category: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         tableView.dataSource = self
         tableView.delegate = self
         originTableViewOriginY = tableView.frame.origin.y
-
+getCurrentCategoryUrl()
         fetchMovies()
-
+        
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.insertSubview(refreshControl, atIndex: 0)
@@ -48,7 +50,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         cell.titleLabel.text = movie["title"] as? String
         cell.synopsisLabel.text = movie["synopsis"] as? String
-        print(posterUrl)
         cell.posterView.setImageWithURL(posterUrl)
         
         return cell
@@ -86,8 +87,17 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
 
     }
     
+    func getCurrentCategoryUrl() -> NSURL {
+        var url = NSURL(string: "https://gist.githubusercontent.com/timothy1ee/d1778ca5b944ed974db0/raw/489d812c7ceeec0ac15ab77bf7c47849f2d1eb2b/gistfile1.json")!
+        print("from the other place \(category)")
+        if category == "dvd" {
+            url = NSURL(string:"somethingelse")!
+        }
+        return url
+    }
+    
     func fetchMovies() -> Void {
-        let url = NSURL(string: "https://gist.githubusercontent.com/timothy1ee/d1778ca5b944ed974db0/raw/489d812c7ceeec0ac15ab77bf7c47849f2d1eb2b/gistfile1.json")!
+        let url = getCurrentCategoryUrl()
         let request = NSURLRequest(URL: url)
         MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         let sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()
@@ -107,7 +117,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             } catch {
                 self.tableView.frame = CGRect(x: 0, y: self.originTableViewOriginY + 50, width: tableWidth, height: tableHeight)
                 self.errorAlertView.hidden = false
-                print("error: \(error)")
             }
             MBProgressHUD.hideHUDForView(self.view, animated: true)
         }
