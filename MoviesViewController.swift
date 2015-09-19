@@ -24,10 +24,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.dataSource = self
         tableView.delegate = self
         originTableViewOriginY = tableView.frame.origin.y
-        
-        let url = NSURL(string: "https://gist.githubusercontent.com/timothy1ee0/d1778ca5b944ed974db0/raw/4c15ab77bf7c47849f2d1eb2b/gistfile1.json")! // bad URL
 
-        fetchMovies(url)
+        fetchMovies()
 
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
@@ -56,9 +54,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         return cell
     }
     
-    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        print("deselecting")
     }
     
 
@@ -69,6 +66,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         let movieDetailsViewController = segue.destinationViewController as! MoviesDetailsViewController
         movieDetailsViewController.movie = movie
+        movieDetailsViewController.thumbnail = cell.posterView.image
     }
     
     func delay(delay:Double, closure:()->()) {
@@ -81,15 +79,15 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func onRefresh() -> Void {
-        let url = NSURL(string: "https://gist.githubusercontent.com/timothy1ee/d1778ca5b944ed974db0/raw/489d812c7ceeec0ac15ab77bf7c47849f2d1eb2b/gistfile1.json")!
         delay(2, closure: {
-            self.fetchMovies(url)
+            self.fetchMovies()
             self.refreshControl.endRefreshing()
         })
 
     }
     
-    func fetchMovies(url: NSURL) -> Void {
+    func fetchMovies() -> Void {
+        let url = NSURL(string: "https://gist.githubusercontent.com/timothy1ee/d1778ca5b944ed974db0/raw/489d812c7ceeec0ac15ab77bf7c47849f2d1eb2b/gistfile1.json")!
         let request = NSURLRequest(URL: url)
         MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         let sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()

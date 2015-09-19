@@ -14,6 +14,8 @@ class MoviesDetailsViewController: UIViewController {
     @IBOutlet weak var synopsisLabel: UILabel!
     @IBOutlet weak var posterView: UIImageView!
     
+    var thumbnail: UIImage?
+    
     var movie: NSDictionary!
     
     override func viewDidLoad() {
@@ -27,9 +29,11 @@ class MoviesDetailsViewController: UIViewController {
         }
         let posterUrl = NSURL(string: url)!
         
-        posterView.setImageWithURL(posterUrl)
+//        posterView.setImageWithURL(posterUrl)
+        posterView.setImageWithURL(posterUrl, placeholderImage: thumbnail)
         titleLabel.text = movie["title"] as? String
         synopsisLabel.text = movie["synopsis"] as? String
+        
 
                
     }
