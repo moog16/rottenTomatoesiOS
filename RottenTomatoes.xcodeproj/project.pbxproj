@@ -16,7 +16,6 @@
 		CB0FF7C71BA8C32200702666 /* box_office.json in Resources */ = {isa = PBXBuildFile; fileRef = CB0FF7C61BA8C32200702666 /* box_office.json */; settings = {ASSET_TAGS = (); }; };
 		CB0FF7CA1BAA1E7C00702666 /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0FF7C91BAA1E7C00702666 /* MovieCell.swift */; settings = {ASSET_TAGS = (); }; };
 		CB259B291BAB4FB100A0BE4F /* MoviesDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB259B281BAB4FB100A0BE4F /* MoviesDetailsViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		CBA5D3781BADD45900D7C195 /* MoviesTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBA5D3771BADD45900D7C195 /* MoviesTabBarController.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +31,6 @@
 		CB0FF7C61BA8C32200702666 /* box_office.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = box_office.json; sourceTree = "<group>"; };
 		CB0FF7C91BAA1E7C00702666 /* MovieCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
 		CB259B281BAB4FB100A0BE4F /* MoviesDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesDetailsViewController.swift; sourceTree = "<group>"; };
-		CBA5D3771BADD45900D7C195 /* MoviesTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoviesTabBarController.swift; sourceTree = "<group>"; };
 		FB73364E6B01AABEB23EBE33 /* Pods-RottenTomatoes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RottenTomatoes.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RottenTomatoes/Pods-RottenTomatoes.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -94,7 +92,6 @@
 				CB0FF7BA1BA8B83C00702666 /* LaunchScreen.storyboard */,
 				CB0FF7BD1BA8B83C00702666 /* Info.plist */,
 				CB0FF7C61BA8C32200702666 /* box_office.json */,
-				CBA5D3771BADD45900D7C195 /* MoviesTabBarController.swift */,
 			);
 			path = RottenTomatoes;
 			sourceTree = "<group>";
@@ -241,7 +238,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB259B291BAB4FB100A0BE4F /* MoviesDetailsViewController.swift in Sources */,
-				CBA5D3781BADD45900D7C195 /* MoviesTabBarController.swift in Sources */,
 				CB0FF7B21BA8B83C00702666 /* AppDelegate.swift in Sources */,
 				CB0FF7C41BA8B88800702666 /* MoviesViewController.swift in Sources */,
 				CB0FF7CA1BAA1E7C00702666 /* MovieCell.swift in Sources */,

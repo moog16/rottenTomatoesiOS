@@ -23,13 +23,11 @@ class MoviesDetailsViewController: UIViewController {
 
         var url = movie.valueForKeyPath("posters.detailed") as! String
         let range = url.rangeOfString(".*cloudfront.net/", options: .RegularExpressionSearch)
-        print("range: \(range)")
         if let range = range {
             url = url.stringByReplacingCharactersInRange(range, withString: "https://content6.flixster.com/")
         }
         let posterUrl = NSURL(string: url)!
         
-//        posterView.setImageWithURL(posterUrl)
         posterView.setImageWithURL(posterUrl, placeholderImage: thumbnail)
         titleLabel.text = movie["title"] as? String
         synopsisLabel.text = movie["synopsis"] as? String
@@ -37,21 +35,5 @@ class MoviesDetailsViewController: UIViewController {
 
                
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

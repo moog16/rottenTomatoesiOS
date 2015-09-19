@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="TZy-Vi-R6Q">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="nc2-Sy-QSe">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
-        <!--Movies-->
+        <!--Box Office-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="MoviesViewController" customModule="RottenTomatoes" customModuleProvider="target" sceneMemberID="viewController">
@@ -13,7 +13,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="146" sectionHeaderHeight="28" sectionFooterHeight="28" id="BfB-L9-mqd">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="519"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -53,6 +53,15 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <tabBar contentMode="scaleToFill" id="eMH-aG-s6i">
+                                <rect key="frame" x="0.0" y="519" width="320" height="49"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <items>
+                                    <tabBarItem title="Box Office" image="video" id="qaS-eU-SeH"/>
+                                    <tabBarItem title="DVD" image="dvd" id="ZyM-Kg-Rc5"/>
+                                </items>
+                            </tabBar>
                             <view hidden="YES" contentMode="scaleToFill" id="RIQ-uc-QVQ">
                                 <rect key="frame" x="0.0" y="64" width="320" height="49"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
@@ -70,9 +79,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Movies" id="nwf-Lq-GTK"/>
+                    <navigationItem key="navigationItem" title="Box Office" id="nwf-Lq-GTK"/>
                     <connections>
+                        <outlet property="boxOfficeTabBarItem" destination="qaS-eU-SeH" id="ow7-c3-Yvw"/>
+                        <outlet property="categoryTabBar" destination="eMH-aG-s6i" id="8Go-fQ-ISH"/>
+                        <outlet property="dvdTabBarItem" destination="ZyM-Kg-Rc5" id="7cV-tk-1CW"/>
                         <outlet property="errorAlertView" destination="RIQ-uc-QVQ" id="xsc-p3-aZV"/>
+                        <outlet property="navigationBarItem" destination="nwf-Lq-GTK" id="0Uv-50-5ex"/>
                         <outlet property="tableView" destination="BfB-L9-mqd" id="WSX-gA-6Lc"/>
                     </connections>
                 </viewController>
@@ -144,51 +157,11 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FnE-oR-wlA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="200" y="438"/>
-        </scene>
-        <!--Movies Tab Bar Controller-->
-        <scene sceneID="LdA-xU-pmW">
-            <objects>
-                <tabBarController id="TZy-Vi-R6Q" customClass="MoviesTabBarController" customModule="RottenTomatoes" customModuleProvider="target" sceneMemberID="viewController">
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="rcN-dX-q2T">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="nc2-Sy-QSe" kind="relationship" relationship="viewControllers" id="HIZ-IS-pAT"/>
-                        <segue destination="MTm-pN-z4g" kind="relationship" relationship="viewControllers" id="hFK-nA-TkQ"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5HY-k0-cAE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-274" y="830"/>
-        </scene>
-        <!--Top Dvds-->
-        <scene sceneID="Kam-2k-tFr">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="MTm-pN-z4g" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Top Dvds" image="dvd" id="Kxy-Bk-s8a"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="QW2-jL-XTP">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="iPr-Cb-s1j"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="npZ-yJ-4Hv" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="200" y="1229"/>
+            <point key="canvasLocation" x="164" y="822"/>
         </scene>
     </scenes>
     <resources>
         <image name="dvd" width="32" height="32"/>
         <image name="video" width="32" height="32"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="iPr-Cb-s1j"/>
-    </inferredMetricsTieBreakers>
 </document>

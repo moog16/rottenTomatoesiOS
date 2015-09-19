@@ -10,29 +10,46 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var errorAlertView: UIView!
+    @IBOutlet weak var categoryTabBar: UITabBar!
+    @IBOutlet weak var boxOfficeTabBarItem: UITabBarItem!
+    @IBOutlet weak var dvdTabBarItem: UITabBarItem!
+    @IBOutlet weak var navigationBarItem: UINavigationItem!
+    
     
     var movies: [NSDictionary]?
     var refreshControl: UIRefreshControl!
     var originTableViewOriginY: CGFloat!
-    var category: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.dataSource = self
         tableView.delegate = self
+        categoryTabBar.delegate = self
+        
         originTableViewOriginY = tableView.frame.origin.y
-getCurrentCategoryUrl()
+        categoryTabBar.selectedItem = boxOfficeTabBarItem
+        
         fetchMovies()
         
         refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.insertSubview(refreshControl, atIndex: 0)
         
+    }
+    
+    func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
+        let currentTabItem = categoryTabBar.selectedItem
+        if currentTabItem == dvdTabBarItem {
+            navigationBarItem.title = "Top DVD Rentals"
+        } else {
+            navigationBarItem.title = "Box Office"
+        }
+        fetchMovies()
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -84,20 +101,20 @@ getCurrentCategoryUrl()
             self.fetchMovies()
             self.refreshControl.endRefreshing()
         })
-
     }
     
-    func getCurrentCategoryUrl() -> NSURL {
-        var url = NSURL(string: "https://gist.githubusercontent.com/timothy1ee/d1778ca5b944ed974db0/raw/489d812c7ceeec0ac15ab77bf7c47849f2d1eb2b/gistfile1.json")!
-        print("from the other place \(category)")
-        if category == "dvd" {
-            url = NSURL(string:"somethingelse")!
+    
+    func getCategoryUrl() -> NSURL {
+        var url = NSURL(string: "https://gist.githubusercontent.com/moog16/954f5c0148bd72334cbd/raw/fe94c7062c79893ef109b4952d0bd2ba673165ca/boxOfficeMovies.json")!
+        let currentTabItem = categoryTabBar.selectedItem
+        if currentTabItem == dvdTabBarItem {
+            url = NSURL(string: "https://gist.githubusercontent.com/moog16/2a859bb9eda81134f376/raw/4e0986b75059935d845b0a5520e7ec3c4299fa01/topDvdMovies.json")!
         }
         return url
     }
     
     func fetchMovies() -> Void {
-        let url = getCurrentCategoryUrl()
+        let url = getCategoryUrl()
         let request = NSURLRequest(URL: url)
         MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         let sessionConfiguration = NSURLSessionConfiguration.defaultSessionConfiguration()
