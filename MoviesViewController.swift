@@ -10,7 +10,7 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UISearchBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var errorAlertView: UIView!
@@ -18,9 +18,11 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var boxOfficeTabBarItem: UITabBarItem!
     @IBOutlet weak var dvdTabBarItem: UITabBarItem!
     @IBOutlet weak var navigationBarItem: UINavigationItem!
+    @IBOutlet weak var movieSearchBar: UISearchBar!
     
     
     var movies: [NSDictionary]?
+    var filteredMovies: [NSDictionary]?
     var refreshControl: UIRefreshControl!
     var originTableViewOriginY: CGFloat!
     
@@ -30,6 +32,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.dataSource = self
         tableView.delegate = self
         categoryTabBar.delegate = self
+        movieSearchBar.delegate = self
         
         originTableViewOriginY = tableView.frame.origin.y
         categoryTabBar.selectedItem = boxOfficeTabBarItem
@@ -52,8 +55,19 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         fetchMovies()
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         if let movies = movies {
+            filteredMovies = searchText.isEmpty ? movies : movies.filter({(movie: NSDictionary) -> Bool in
+                let title = movie["title"] as? String
+                return title!.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+            })
+            
+            tableView.reloadData()
+        }
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if let movies = filteredMovies {
             return movies.count
         }
         return 0
@@ -62,12 +76,19 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     func  tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieCell
         
-        let movie = movies![indexPath.row]
+        let movie = filteredMovies![indexPath.row]
         let posterUrl = NSURL(string: movie.valueForKeyPath("posters.thumbnail") as! String)!
         
         cell.titleLabel.text = movie["title"] as? String
         cell.synopsisLabel.text = movie["synopsis"] as? String
-        cell.posterView.setImageWithURL(posterUrl)
+        let posterRequest = NSURLRequest(URL: posterUrl)
+        cell.posterView.setImageWithURLRequest(posterRequest, placeholderImage: nil, success: { (request, response, image) -> Void in
+                cell.posterView.alpha = 0.0
+                UIView.animateWithDuration(0.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    cell.posterView.image = image
+                    cell.posterView.alpha = 1.0
+                }, completion: nil)
+            }, failure: nil)
         
         return cell
     }
@@ -103,13 +124,13 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         })
     }
     
-    
     func getCategoryUrl() -> NSURL {
         var url = NSURL(string: "https://gist.githubusercontent.com/moog16/954f5c0148bd72334cbd/raw/fe94c7062c79893ef109b4952d0bd2ba673165ca/boxOfficeMovies.json")!
         let currentTabItem = categoryTabBar.selectedItem
         if currentTabItem == dvdTabBarItem {
             url = NSURL(string: "https://gist.githubusercontent.com/moog16/2a859bb9eda81134f376/raw/4e0986b75059935d845b0a5520e7ec3c4299fa01/topDvdMovies.json")!
         }
+
         return url
     }
     
@@ -126,15 +147,18 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             do {
                 let json = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
                 self.movies = json["movies"] as? [NSDictionary]
+                self.filteredMovies = self.movies!
                 if(!self.errorAlertView.hidden) {
                     self.errorAlertView.hidden = true
                     self.tableView.frame = CGRect(x: 0, y: self.originTableViewOriginY, width: tableWidth, height: tableHeight)
                 }
-                self.tableView.reloadData()
             } catch {
-                self.tableView.frame = CGRect(x: 0, y: self.originTableViewOriginY + 50, width: tableWidth, height: tableHeight)
+                self.movies = nil
+                self.filteredMovies = nil
+                self.tableView.frame = CGRect(x: 0, y: self.originTableViewOriginY + 15, width: tableWidth, height: tableHeight)
                 self.errorAlertView.hidden = false
             }
+            self.tableView.reloadData()
             MBProgressHUD.hideHUDForView(self.view, animated: true)
         }
         

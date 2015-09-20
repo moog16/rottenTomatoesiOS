@@ -8,11 +8,12 @@
 
 import UIKit
 
-class MoviesDetailsViewController: UIViewController {
+class MoviesDetailsViewController: UIViewController, UITabBarDelegate {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var synopsisLabel: UILabel!
     @IBOutlet weak var posterView: UIImageView!
+    @IBOutlet weak var navigationBarItem: UINavigationItem!
     
     var thumbnail: UIImage?
     
@@ -31,9 +32,9 @@ class MoviesDetailsViewController: UIViewController {
         posterView.setImageWithURL(posterUrl, placeholderImage: thumbnail)
         titleLabel.text = movie["title"] as? String
         synopsisLabel.text = movie["synopsis"] as? String
+        navigationBarItem.title = movie["title"] as? String
         
-
-               
     }
+    
 
 }
