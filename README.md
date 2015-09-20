@@ -17,6 +17,7 @@ Time spent: `<Number of hours spent>`
 #### Optional
 
 - [x] All images fade in.
+- [ ] Implement segmented control to switch between list view and grid view.
 - [x] For the larger poster, load the low-res first and switch to high-res when complete.
 - [ ] All images should be cached in memory and disk: AppDelegate has an instance of `NSURLCache` and `NSURLRequest` makes a request with `NSURLRequestReturnCacheDataElseLoad` cache policy. I tested it by turning off wifi and restarting the app.
 - [ ] Customize the highlight and selection effect of the cell.
@@ -25,7 +26,7 @@ Time spent: `<Number of hours spent>`
 - [x] Add a search bar: pretty simple implementation of searching against the existing table view data.
 
 ### Walkthrough
-![Video Walkthrough](http://i.gif)
+![Video Walkthrough](http://i.imgur.com/9d4fXIm.gif)
 
 Credits
 ---------
