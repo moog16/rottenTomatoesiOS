@@ -29,6 +29,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let URLCache = NSURLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
+        NSURLCache.setSharedURLCache(URLCache)
+//        NSURLCacheStoragePolicy = NSURLRequestReturnCacheDataElseLoad
+        
         tableView.dataSource = self
         tableView.delegate = self
         categoryTabBar.delegate = self
@@ -82,6 +86,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         cell.titleLabel.text = movie["title"] as? String
         cell.synopsisLabel.text = movie["synopsis"] as? String
         let posterRequest = NSURLRequest(URL: posterUrl)
+        
+//        let posterRequest = NSURLRequest(URL: posterUrl, cachePolicy:  NSURLRequestReturnCacheDataElseLoad, timeoutInterval: 60)
+//        NSURLCache.cachedResponseForRequest(posterRequest)
+        
         cell.posterView.setImageWithURLRequest(posterRequest, placeholderImage: nil, success: { (request, response, image) -> Void in
                 cell.posterView.alpha = 0.0
                 UIView.animateWithDuration(0.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseOut, animations: {
