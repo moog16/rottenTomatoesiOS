@@ -10,7 +10,7 @@ import UIKit
 import AFNetworking
 import MBProgressHUD
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UISearchBarDelegate {
+class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UITabBarDelegate, UISearchBarDelegate, UICollectionViewDataSource, UICollectionViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var errorAlertView: UIView!
@@ -19,6 +19,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var dvdTabBarItem: UITabBarItem!
     @IBOutlet weak var navigationBarItem: UINavigationItem!
     @IBOutlet weak var movieSearchBar: UISearchBar!
+    @IBOutlet weak var gridOrListViewSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var movieGridView: UICollectionView!
     
     
     var movies: [NSDictionary]?
@@ -31,10 +33,13 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         let URLCache = NSURLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
         NSURLCache.setSharedURLCache(URLCache)
+        gridOrListViewSegmentedControl.selectedSegmentIndex = 0
 //        NSURLCacheStoragePolicy = NSURLRequestReturnCacheDataElseLoad
         
         tableView.dataSource = self
         tableView.delegate = self
+        movieGridView.delegate = self
+        movieGridView.dataSource = self
         categoryTabBar.delegate = self
         movieSearchBar.delegate = self
         
@@ -47,6 +52,14 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.insertSubview(refreshControl, atIndex: 0)
         
+    }
+    
+    @IBAction func onChangeGridOrList(sender: AnyObject) {
+        if gridOrListViewSegmentedControl.selectedSegmentIndex == 1 {
+            movieGridView.hidden = false
+        } else {
+            movieGridView.hidden = true
+        }
     }
     
     func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem) {
@@ -70,11 +83,42 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfItems() -> Int {
         if let movies = filteredMovies {
             return movies.count
         }
         return 0
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return numberOfItems()
+    }
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return numberOfItems()
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = movieGridView.dequeueReusableCellWithReuseIdentifier("GridMovieCell", forIndexPath: indexPath) as! GridMovieViewCell
+        
+        let movie = filteredMovies![indexPath.row]
+        let posterUrl = NSURL(string: movie.valueForKeyPath("posters.thumbnail") as! String)!
+        
+        cell.titleLabel.text = movie["title"] as? String
+//        let posterRequest = NSURLRequest(URL: posterUrl)
+        cell.posterView.setImageWithURL(posterUrl)
+        
+        
+//        cell.posterView.setImageWithURLRequest(posterRequest, placeholderImage: nil, success: { (request, response, image) -> Void in
+//            cell.posterView.alpha = 0.0
+//            UIView.animateWithDuration(0.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+//                cell.posterView.image = image
+//                cell.posterView.alpha = 1.0
+//                }, completion: nil)
+//            }, failure: nil)
+        
+        return cell
+
     }
     
     func  tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

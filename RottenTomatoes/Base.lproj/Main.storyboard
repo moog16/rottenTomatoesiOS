@@ -88,15 +88,69 @@
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.032299974459999999" blue="0.064700402470000001" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
+                            <collectionView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="Nk8-hq-o1h">
+                                <rect key="frame" x="0.0" y="47" width="320" height="472"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="55d-6C-p9I">
+                                    <size key="itemSize" width="153" height="187"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GridMovieCell" id="ajm-er-16K" customClass="GridMovieViewCell" customModule="RottenTomatoes" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="153" height="187"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="153" height="187"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="25r-Zg-aTR">
+                                                    <rect key="frame" x="8" y="142" width="137" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="uoV-bF-5Pq">
+                                                    <rect key="frame" x="8" y="8" width="137" height="127"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <connections>
+                                            <outlet property="posterView" destination="uoV-bF-5Pq" id="6zc-vW-gsL"/>
+                                            <outlet property="titleLabel" destination="25r-Zg-aTR" id="jlG-qz-n4Y"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Box Office" id="nwf-Lq-GTK"/>
+                    <navigationItem key="navigationItem" title="Box Office" id="nwf-Lq-GTK">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="VdF-HZ-kg3">
+                            <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="0tZ-DU-owo">
+                                <rect key="frame" x="223" y="8" width="81" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="List"/>
+                                    <segment title="Grid"/>
+                                </segments>
+                                <connections>
+                                    <action selector="onChangeGridOrList:" destination="BYZ-38-t0r" eventType="valueChanged" id="GJi-Rf-NAV"/>
+                                </connections>
+                            </segmentedControl>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="boxOfficeTabBarItem" destination="qaS-eU-SeH" id="ow7-c3-Yvw"/>
                         <outlet property="categoryTabBar" destination="eMH-aG-s6i" id="8Go-fQ-ISH"/>
                         <outlet property="dvdTabBarItem" destination="ZyM-Kg-Rc5" id="7cV-tk-1CW"/>
                         <outlet property="errorAlertView" destination="RIQ-uc-QVQ" id="xsc-p3-aZV"/>
+                        <outlet property="gridOrListViewSegmentedControl" destination="0tZ-DU-owo" id="oQK-sI-Z6G"/>
+                        <outlet property="movieGridView" destination="Nk8-hq-o1h" id="tWC-c2-gtn"/>
                         <outlet property="movieSearchBar" destination="aUq-VD-jTu" id="MNv-w7-9J2"/>
                         <outlet property="navigationBarItem" destination="nwf-Lq-GTK" id="0Uv-50-5ex"/>
                         <outlet property="tableView" destination="BfB-L9-mqd" id="WSX-gA-6Lc"/>
