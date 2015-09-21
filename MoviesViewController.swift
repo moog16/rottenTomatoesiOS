@@ -25,7 +25,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     var movies: [NSDictionary]?
     var filteredMovies: [NSDictionary]?
-    var refreshControl: UIRefreshControl!
+    var refreshControlTableView: UIRefreshControl!
+    var refreshControlGridView: UIRefreshControl!
     var originTableViewOriginY: CGFloat!
     
     override func viewDidLoad() {
@@ -34,7 +35,6 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let URLCache = NSURLCache(memoryCapacity: 4 * 1024 * 1024, diskCapacity: 20 * 1024 * 1024, diskPath: nil)
         NSURLCache.setSharedURLCache(URLCache)
         gridOrListViewSegmentedControl.selectedSegmentIndex = 0
-//        NSURLCacheStoragePolicy = NSURLRequestReturnCacheDataElseLoad
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -48,17 +48,23 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
         fetchMovies()
         
-        refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
-        self.tableView.insertSubview(refreshControl, atIndex: 0)
+        refreshControlTableView = UIRefreshControl()
+        refreshControlTableView.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        self.tableView.insertSubview(refreshControlTableView, atIndex: 0)
+        
+        refreshControlGridView = UIRefreshControl()
+        refreshControlGridView.addTarget(self, action: "onRefresh", forControlEvents: UIControlEvents.ValueChanged)
+        self.movieGridView.insertSubview(refreshControlGridView, atIndex: 0)
         
     }
     
     @IBAction func onChangeGridOrList(sender: AnyObject) {
         if gridOrListViewSegmentedControl.selectedSegmentIndex == 1 {
             movieGridView.hidden = false
+            movieGridView.reloadData()
         } else {
             movieGridView.hidden = true
+            tableView.reloadData()
         }
     }
     
@@ -78,8 +84,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 let title = movie["title"] as? String
                 return title!.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
             })
-            
-            tableView.reloadData()
+            if gridOrListViewSegmentedControl.selectedSegmentIndex == 1 {
+                movieGridView.reloadData()
+            } else {
+                tableView.reloadData()
+            }
+
         }
     }
     
@@ -105,17 +115,22 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         let posterUrl = NSURL(string: movie.valueForKeyPath("posters.thumbnail") as! String)!
         
         cell.titleLabel.text = movie["title"] as? String
-//        let posterRequest = NSURLRequest(URL: posterUrl)
-        cell.posterView.setImageWithURL(posterUrl)
+        let posterRequest = NSURLRequest(URL: posterUrl)
         
-        
-//        cell.posterView.setImageWithURLRequest(posterRequest, placeholderImage: nil, success: { (request, response, image) -> Void in
-//            cell.posterView.alpha = 0.0
-//            UIView.animateWithDuration(0.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-//                cell.posterView.image = image
-//                cell.posterView.alpha = 1.0
-//                }, completion: nil)
-//            }, failure: nil)
+        cell.posterView.setImageWithURLRequest(posterRequest, placeholderImage: nil, success: { (request, response, image) -> Void in
+            //if status code is 0, then it is loaded from the cache
+            if response.statusCode == 0 {
+                cell.posterView.image = image
+            } else {
+                cell.posterView.alpha = 0.0
+                UIView.animateWithDuration(0.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    cell.posterView.image = image
+                    cell.posterView.alpha = 1.0
+                    }, completion: nil)
+            }
+
+            
+            }, failure: nil)
         
         return cell
 
@@ -131,15 +146,16 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         cell.synopsisLabel.text = movie["synopsis"] as? String
         let posterRequest = NSURLRequest(URL: posterUrl)
         
-//        let posterRequest = NSURLRequest(URL: posterUrl, cachePolicy:  NSURLRequestReturnCacheDataElseLoad, timeoutInterval: 60)
-//        NSURLCache.cachedResponseForRequest(posterRequest)
-        
         cell.posterView.setImageWithURLRequest(posterRequest, placeholderImage: nil, success: { (request, response, image) -> Void in
-                cell.posterView.alpha = 0.0
-                UIView.animateWithDuration(0.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                if response.statusCode == 0 {
                     cell.posterView.image = image
-                    cell.posterView.alpha = 1.0
-                }, completion: nil)
+                } else {
+                    cell.posterView.alpha = 0.0
+                    UIView.animateWithDuration(0.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                        cell.posterView.image = image
+                        cell.posterView.alpha = 1.0
+                    }, completion: nil)
+                }
             }, failure: nil)
         
         return cell
@@ -149,31 +165,36 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
     
-
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let cell = sender as! MovieCell
-        let indexPath = tableView.indexPathForCell(cell)
-        let movie = movies![indexPath!.row]
+    func setDetailsView(image: UIImage, indexPath: NSIndexPath, segue: UIStoryboardSegue) -> Void {
+        let movie = movies![indexPath.row]
         
         let movieDetailsViewController = segue.destinationViewController as! MoviesDetailsViewController
         movieDetailsViewController.movie = movie
-        movieDetailsViewController.thumbnail = cell.posterView.image
+        movieDetailsViewController.thumbnail = image
     }
     
-    func delay(delay:Double, closure:()->()) {
-        dispatch_after(
-            dispatch_time(
-                DISPATCH_TIME_NOW,
-                Int64(delay * Double(NSEC_PER_SEC))
-            ),
-            dispatch_get_main_queue(), closure)
+
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if gridOrListViewSegmentedControl.selectedSegmentIndex == 1 {
+            let cell = sender as! GridMovieViewCell
+            let image = cell.posterView.image
+            let indexPath = movieGridView.indexPathForCell(cell)
+            setDetailsView(image!, indexPath: indexPath!, segue: segue)
+        } else {
+            let cell = sender as! MovieCell
+            let image = cell.posterView.image
+            let indexPath = tableView.indexPathForCell(cell)
+            setDetailsView(image!, indexPath: indexPath!, segue: segue)
+        }
     }
     
     func onRefresh() -> Void {
-        delay(2, closure: {
-            self.fetchMovies()
-            self.refreshControl.endRefreshing()
-        })
+        self.fetchMovies()
+        if gridOrListViewSegmentedControl.selectedSegmentIndex == 0 {
+            self.refreshControlTableView.endRefreshing()
+        } else {
+            self.refreshControlGridView.endRefreshing()
+        }
     }
     
     func getCategoryUrl() -> NSURL {
